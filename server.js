@@ -8,9 +8,10 @@ app.post("/pmc", async (req, res) => {
   try {
     const jsonBody = req.body;
     console.log("Forwarding payload to Apps Script as x-www-form-urlencoded...");
+    console.log(JSON.stringify(jsonBody, null, 2));
 
     const response = await axios.post(
-      "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec",
+      "https://script.google.com/macros/s/AKfycbwcpoFjhgVr7kEKi7kdwCIzR_hSOcLetF1jqh8xbaBE7WpFQyv5b1xWi9L4JdcPPHd7/exec",
       new URLSearchParams({
         payload: JSON.stringify(jsonBody)
       }),
