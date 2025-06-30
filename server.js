@@ -7,7 +7,16 @@ app.use(express.json());
 
 app.post('/pmc', async (req, res) => {
   try {
-    const jsonBody = JSON.stringify(req.body);
+    let payloadObj;
+
+    // Wrap array payloads in { tasks: [...] }
+    if (Array.isArray(req.body)) {
+      payloadObj = { tasks: req.body };
+    } else {
+      payloadObj = req.body;
+    }
+
+    const jsonBody = JSON.stringify(payloadObj);
     console.log("Forwarding payload to Apps Script:", jsonBody);
 
     const response = await axios.post(
