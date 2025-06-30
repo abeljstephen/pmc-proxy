@@ -1,28 +1,18 @@
 const express = require('express');
 const axios = require('axios');
-const qs = require('querystring');
 
 const app = express();
 app.use(express.json());
 
 app.post('/pmc', async (req, res) => {
   try {
-    let payloadObj;
-
-    // Wrap array payloads in { tasks: [...] }
-    if (Array.isArray(req.body)) {
-      payloadObj = { tasks: req.body };
-    } else {
-      payloadObj = req.body;
-    }
-
-    const jsonBody = JSON.stringify(payloadObj);
-    console.log("Forwarding payload to Apps Script:", jsonBody);
+    const jsonBody = req.body;
+    console.log("Forwarding payload to Apps Script:", JSON.stringify(jsonBody, null, 2));
 
     const response = await axios.post(
       "https://script.google.com/macros/s/AKfycbwcpoFjhgVr7kEKi7kdwCIzR_hSOcLetF1jqh8xbaBE7WpFQyv5b1xWi9L4JdcPPHd7/exec",
-      qs.stringify({ payload: jsonBody }),
-      { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+      jsonBody, // Send raw JSON
+      { headers: { "Content-Type": "application/json" } }
     );
 
     res.json(response.data);
