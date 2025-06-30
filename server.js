@@ -1,23 +1,23 @@
-const express = require('express');
-const axios = require('axios');
+const express = require("express");
+const axios = require("axios");
 
 const app = express();
 app.use(express.json());
 
-app.post('/pmc', async (req, res) => {
+app.post("/pmc", async (req, res) => {
   try {
     const jsonBody = req.body;
-    console.log("Forwarding payload to Apps Script:", JSON.stringify(jsonBody, null, 2));
-
-    // Wrap JSON into x-www-form-urlencoded payload
-    const payload = new URLSearchParams({
-      payload: JSON.stringify(jsonBody)
-    }).toString();
-
+    console.log("Forwarding payload to Apps Script as URL-encoded 'payload'...");
     const response = await axios.post(
       "https://script.google.com/macros/s/AKfycbwcpoFjhgVr7kEKi7kdwCIzR_hSOcLetF1jqh8xbaBE7WpFQyv5b1xWi9L4JdcPPHd7/exec",
-      payload,
-      { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+      new URLSearchParams({
+        payload: JSON.stringify(jsonBody)
+      }),
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      }
     );
 
     res.json(response.data);
@@ -29,6 +29,6 @@ app.post('/pmc', async (req, res) => {
 
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
-  console.log(`Proxy listening on port ${PORT}`);
+  console.log(`Server listening on port ${PORT}`);
 });
 
