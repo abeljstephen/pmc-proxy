@@ -5,14 +5,18 @@ app.use(express.json());
 
 app.post('/pmc', async (req, res) => {
   try {
+    const body = JSON.stringify(req.body);
+    console.log("Forwarding body to Apps Script:", body);
+
     const response = await axios.post(
       'https://script.google.com/macros/s/AKfycbwcpoFjhgVr7kEKi7kdwCIzR_hSOcLetF1jqh8xbaBE7WpFQyv5b1xWi9L4JdcPPHd7/exec',
-      JSON.stringify(req.body),
+      body,
       { headers: { 'Content-Type': 'application/json' } }
     );
+
     res.json(response.data);
   } catch (error) {
-    console.error(error.response?.data || error.message);
+    console.error("Error response from Apps Script:", error.response?.data || error.message);
     res.status(500).json({ error: error.response?.data || error.message });
   }
 });
