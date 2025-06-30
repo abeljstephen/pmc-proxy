@@ -10,14 +10,15 @@ app.post("/pmc", async (req, res) => {
     console.log("Forwarding payload to Apps Script as x-www-form-urlencoded...");
 
     const response = await axios.post(
-      "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec",
+      "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec",
       new URLSearchParams({
         payload: JSON.stringify(jsonBody)
       }),
       {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
-        }
+        },
+        maxRedirects: 5
       }
     );
 
