@@ -8,11 +8,13 @@ app.post('/pmc', async (req, res) => {
     const body = JSON.stringify(req.body);
     console.log("Forwarding body to Apps Script:", body);
 
-    const response = await axios.post(
-      'https://script.google.com/macros/s/AKfycbwcpoFjhgVr7kEKi7kdwCIzR_hSOcLetF1jqh8xbaBE7WpFQyv5b1xWi9L4JdcPPHd7/exec',
-      body,
-      { headers: { 'Content-Type': 'application/json' } }
-    );
+    const response = await axios({
+      method: "post",
+      url: "https://script.google.com/macros/s/AKfycbwcpoFjhgVr7kEKi7kdwCIzR_hSOcLetF1jqh8xbaBE7WpFQyv5b1xWi9L4JdcPPHd7/exec",
+      headers: { "Content-Type": "application/json" },
+      data: body,
+      transformRequest: [(data) => data]
+    });
 
     res.json(response.data);
   } catch (error) {
