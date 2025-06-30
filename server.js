@@ -1,5 +1,6 @@
 const express = require('express');
 const axios = require('axios');
+const qs = require('qs');
 
 const app = express();
 app.use(express.json());
@@ -9,10 +10,14 @@ app.post('/pmc', async (req, res) => {
     const jsonBody = req.body;
     console.log("Forwarding payload to Apps Script:", JSON.stringify(jsonBody, null, 2));
 
+    const formPayload = qs.stringify({
+      payload: JSON.stringify(jsonBody)
+    });
+
     const response = await axios.post(
       "https://script.google.com/macros/s/AKfycbwcpoFjhgVr7kEKi7kdwCIzR_hSOcLetF1jqh8xbaBE7WpFQyv5b1xWi9L4JdcPPHd7/exec",
-      jsonBody, // Send raw JSON
-      { headers: { "Content-Type": "application/json" } }
+      formPayload,
+      { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
     );
 
     res.json(response.data);
@@ -23,7 +28,5 @@ app.post('/pmc', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => {
-  console.log(`Proxy listening on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Proxy listening on port ${PORT}`));
 
