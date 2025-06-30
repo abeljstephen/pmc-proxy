@@ -4,28 +4,26 @@ const qs = require('querystring');
 
 const app = express();
 
-// Don't use express.json()
-// Instead, read the raw body as text
+// Use text body parser so we control JSON ourselves
 app.use(express.text({ type: "*/*" }));
 
 app.post('/pmc', async (req, res) => {
   try {
     let bodyData;
 
-    // If client sent JSON
+    // If incoming is JSON
     if (req.is('application/json')) {
       bodyData = JSON.parse(req.body);
     }
-    // If client sent form-urlencoded with payload=
+    // If incoming is form-urlencoded
     else if (req.is('application/x-www-form-urlencoded')) {
       const parsed = qs.parse(req.body);
       bodyData = JSON.parse(parsed.payload);
-    }
-    else {
+    } else {
       throw new Error("Unsupported content type");
     }
 
-    console.log("Forwarding body to Apps Script:", bodyData);
+    console.log("Forwarding payload to Apps Script:", JSON.stringify(bodyData));
 
     // Send to Apps Script as form-urlencoded
     const response = await axios.post(
@@ -36,7 +34,7 @@ app.post('/pmc', async (req, res) => {
 
     res.json(response.data);
   } catch (error) {
-    console.error("Error response from Apps Script:", error.response?.data || error.message);
+    console.error("Error forwarding to Apps Script:", error.response?.data || error.message);
     res.status(500).json({ error: error.response?.data || error.message });
   }
 });
