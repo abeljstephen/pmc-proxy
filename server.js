@@ -23,6 +23,9 @@ app.post("/pmc", async (req, res) => {
       }
     );
 
+    console.log("Received response from Apps Script:");
+    console.log(response.data);
+
     res.json(response.data);
   } catch (error) {
     console.error("Error response from Apps Script:", error.response?.data || error.message);
@@ -30,6 +33,8 @@ app.post("/pmc", async (req, res) => {
   }
 });
 
+// START the server
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`Proxy listening on port ${PORT}`));
-
+app.listen(PORT, () => {
+  console.log(`Proxy listening on port ${PORT}`);
+});
