@@ -17,7 +17,7 @@ app.post("/pmc", async (req, res) => {
     // Send to Apps Script
     const response = await axios.post(
       "https://script.google.com/macros/s/AKfycbwcpoFjhgVr7kEKi7kdwCIzR_hSOcLetF1jqh8xbaBE7WpFQyv5b1xWi9L4JdcPPHd7/exec",
-      formData.toString(),
+      formData,
       {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
@@ -38,4 +38,3 @@ const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`Proxy listening on port ${PORT}`);
 });
-
